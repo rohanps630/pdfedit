@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box as BoxComponent } from '../components/Box';
 import { getMovePosition } from '../utils/helpers';
-import { BoxMode, DragActions, TextMode } from '../entities';
+import { BoxMode, DragActions } from '../entities';
 
 interface Props {
   pageWidth: number;
@@ -28,7 +28,7 @@ export const Box = ({
   const [operation, setOperation] = useState<DragActions>(
     DragActions.NO_MOVEMENT
   );
-  const [textMode, setTextMode] = useState<BoxMode>(BoxMode.COMMAND);
+  const [boxMode, setBoxMode] = useState<BoxMode>(BoxMode.COMMAND);
 
   useEffect(() => {
     console.log("positionTop: ", positionTop);
@@ -57,7 +57,7 @@ export const Box = ({
   };
 
   const handleMousedown = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (textMode !== TextMode.COMMAND) {
+    if (boxMode !== BoxMode.COMMAND) {
       return;
     }
 
@@ -68,7 +68,7 @@ export const Box = ({
   const handleMouseUp = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
 
-    if (textMode !== TextMode.COMMAND) {
+    if (boxMode !== BoxMode.COMMAND) {
       return;
     }
 
@@ -108,8 +108,8 @@ export const Box = ({
       handleMouseUp(event);
     }
 
-    if (textMode === TextMode.INSERT) {
-      setTextMode(TextMode.COMMAND);
+    if (boxMode === BoxMode.INSERT) {
+      setBoxMode(BoxMode.COMMAND);
       prepareTextAndUpdate();
     }
   };
@@ -135,7 +135,7 @@ export const Box = ({
       text={content}
       width={width}
       height={height}
-      mode={textMode}
+      mode={boxMode}
       size={size}
       inputRef={inputRef}
       positionTop={positionTop}

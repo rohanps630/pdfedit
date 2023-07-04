@@ -1,4 +1,4 @@
-import { useReducer, useCallback } from 'react';
+import { useReducer, useCallback, useEffect } from 'react';
 
 enum ActionType {
   RESET = 'RESET',
@@ -111,6 +111,12 @@ const reducer = (state: State, action: Action) => {
 export const useAttachments = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { allPageAttachments, pageAttachments } = state;
+
+  useEffect(() => {
+    console.log("allPageAttachments")
+    console.log(allPageAttachments)
+  }, [allPageAttachments]);
+  
 
   const add = (newAttachment: Attachment) =>
     dispatch({ type: ActionType.ADD_ATTACHMENT, attachment: newAttachment });

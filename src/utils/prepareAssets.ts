@@ -109,19 +109,26 @@ const scripts: Script[] = [
   {
     name: 'pdfjsLib',
     src: 'https://unpkg.com/pdfjs-dist@2.3.200/build/pdf.min.js',
+    // src: '../lib/pdf.min.js',
   },
   {
     name: 'PDFLib',
     src: 'https://unpkg.com/pdf-lib@1.4.0/dist/pdf-lib.min.js',
+    // src: '../lib/pdf-lib.min.js',
   },
   {
     name: 'download',
     src: 'https://unpkg.com/downloadjs@1.4.7',
+    // src: '../lib/download.js',
   },
   {
     name: 'makeTextPDF',
-    src:
-      'https://cdn.jsdelivr.net/gh/snamoah/react-pdf-editor/public/makeTextPDF.js',
+    src: 'https://cdn.jsdelivr.net/gh/snamoah/react-pdf-editor/public/makeTextPDF.js',
+    // src: '../lib/makeTextPDF.js',
   },
-  { name: 'w3Color', src: 'https://www.w3schools.com/lib/w3color.js' },
+  {
+    name: 'w3Color',
+    src: 'https://www.w3schools.com/lib/w3color.js',
+    // src: '../lib/w3color.js',
+  },
 ];

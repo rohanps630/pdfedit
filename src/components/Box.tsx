@@ -1,5 +1,7 @@
 import React, { RefObject } from "react";
 import { BoxMode } from "../entities";
+import { UploadTypes, useUploader } from "../hooks/useUploader";
+import { useAttachments } from "../hooks/useAttachments";
 
 interface Props {
   inputRef: RefObject<HTMLInputElement>;
@@ -20,22 +22,40 @@ interface Props {
 }
 
 export const Box: React.FC<Props> = ({
-  text,
   width,
   height,
-  inputRef,
   mode,
   size,
   fontFamily,
   positionTop,
   positionLeft,
-  onChangeText,
   handleMouseDown,
   handleMouseMove,
   handleMouseOut,
   handleMouseUp,
   lineHeight,
 }) => {
+
+  const {
+    add: addAttachment,
+    allPageAttachments,
+    pageAttachments,
+    reset: resetAttachments,
+    update,
+    remove,
+    setPageIndex,
+  } = useAttachments();
+  
+  const {
+    inputRef: imageInput,
+    handleClick: handleImageClick,
+    onClick: onImageClick,
+    upload: uploadImage,
+  } = useUploader({
+    use: UploadTypes.IMAGE,
+    afterUploadAttachment: addAttachment,
+  });
+  
   return (
     <div
       onMouseDown={handleMouseDown}
@@ -60,27 +80,14 @@ export const Box: React.FC<Props> = ({
       }}
     >
       <input
-        type="text"
-        ref={inputRef}
-        onChange={onChangeText}
+        type="file"
+        ref={imageInput}
         readOnly={mode === BoxMode.COMMAND}
-        style={{
-          width: "100%",
-          borderStyle: "none",
-          borderWidth: 0,
-          fontFamily,
-          fontSize: size,
-          outline: "none",
-          padding: 0,
-          boxSizing: "border-box",
-          lineHeight,
-          height,
-          margin: 0,
-          // backgroundColor: 'transparent',
-          backgroundColor: "black",
-          cursor: mode === BoxMode.COMMAND ? "move" : "text",
-        }}
-        value={text}
+        id="image"
+        name="image"
+        accept="image/*"
+        onClick={onImageClick}
+        onChange={uploadImage}
       />
     </div>
   );
