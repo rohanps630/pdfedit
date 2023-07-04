@@ -19,7 +19,7 @@ export async function save(
   };
 
   try {
-    pdfDoc = await PDFLib.PDFDocument.load(await readAsArrayBuffer(pdfFile));
+    pdfDoc = await PDFLib?.PDFDocument.load(await readAsArrayBuffer(pdfFile));
   } catch (e) {
     console.log('Failed to load PDF.');
     throw e;
@@ -28,6 +28,7 @@ export async function save(
   const pagesProcesses = pdfDoc.getPages()?.map(async (page, pageIndex) => {
     const pageObjects = objects[pageIndex];
     // 'y' starts from bottom in PDFLib, use this to calculate y
+
     const pageHeight = page.getHeight();
     const embedProcesses = pageObjects?.map(async (object: Attachment) => {
       if (object.type === 'image') {
@@ -110,6 +111,26 @@ export async function save(
           });
           page.pushOperators(popGraphicsState());
         };
+      } if (object.type === 'box') {
+        const { file, x, y, width, height } = object as ImageAttachment;
+        let img: any;
+        try {
+          if (file.type === 'image/jpeg') {
+            img = await pdfDoc.embedJpg(await readAsArrayBuffer(file));
+          } else {
+            img = await pdfDoc.embedPng(await readAsArrayBuffer(file));
+          }
+          return () =>
+            page.drawImage(img, {
+              x,
+              y: pageHeight - y - height,
+              width,
+              height,
+            });
+        } catch (e) {
+          console.log('Failed to embed image.', e);
+          throw e;
+        }
       }
     });
     // embed objects in order
@@ -117,6 +138,8 @@ export async function save(
     drawProcesses.forEach((p) => p());
   });
   await Promise.all(pagesProcesses);
+  // console.log("attachments object.type")
+  //   console.log(object.type)
   try {
     const pdfBytes = await pdfDoc.save();
     download(pdfBytes, name, 'application/pdf');
