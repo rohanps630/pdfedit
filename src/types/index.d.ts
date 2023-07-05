@@ -40,7 +40,8 @@ interface TextAttachment extends AttachmentBase {
 }
 
 interface BoxAttachment extends AttachmentBase {
-  size?: number;
+  file: File;
+  img: HTMLImageElement;
 }
 
 interface Dimensions {

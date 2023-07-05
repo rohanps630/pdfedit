@@ -1,7 +1,6 @@
 import React, { RefObject } from "react";
 import { BoxMode } from "../entities";
 import { UploadTypes, useUploader } from "../hooks/useUploader";
-import { useAttachments } from "../hooks/useAttachments";
 
 interface Props {
   inputRef: RefObject<HTMLInputElement>;
@@ -18,7 +17,8 @@ interface Props {
   handleMouseUp: DragEventListener<HTMLDivElement>;
   handleMouseMove: DragEventListener<HTMLDivElement>;
   handleMouseOut: DragEventListener<HTMLDivElement>;
-  onChangeText: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeImage?: (newAttachment: Attachment) => void;
 }
 
 export const Box: React.FC<Props> = ({
@@ -34,17 +34,9 @@ export const Box: React.FC<Props> = ({
   handleMouseOut,
   handleMouseUp,
   lineHeight,
+  onChange,
+  onChangeImage,
 }) => {
-
-  const {
-    add: addAttachment,
-    allPageAttachments,
-    pageAttachments,
-    reset: resetAttachments,
-    update,
-    remove,
-    setPageIndex,
-  } = useAttachments();
   
   const {
     inputRef: imageInput,
@@ -53,7 +45,7 @@ export const Box: React.FC<Props> = ({
     upload: uploadImage,
   } = useUploader({
     use: UploadTypes.IMAGE,
-    afterUploadAttachment: addAttachment,
+    afterUploadAttachment: onChangeImage,
   });
   
   return (
@@ -86,7 +78,7 @@ export const Box: React.FC<Props> = ({
         id="image"
         name="image"
         accept="image/*"
-        onClick={onImageClick}
+        onClick={handleImageClick}
         onChange={uploadImage}
       />
     </div>

@@ -12,16 +12,14 @@ interface Props {
 export const Box = ({
   x,
   y,
-  text,
   width,
   height,
   size,
   pageHeight,
   pageWidth,
   updateBoxAttachment,
-}: TextAttachment & Props) => {
+}: BoxAttachment & Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [content, setContent] = useState(text || '');
   const [mouseDown, setMouseDown] = useState(false);
   const [positionTop, setPositionTop] = useState(y);
   const [positionLeft, setPositionLeft] = useState(x);
@@ -110,36 +108,45 @@ export const Box = ({
 
     if (boxMode === BoxMode.INSERT) {
       setBoxMode(BoxMode.COMMAND);
-      prepareTextAndUpdate();
+      UpdateInput();
     }
   };
 
-  const prepareTextAndUpdate = () => {
+  const UpdateInput = () => {
     // Deselect any selection when returning to command mode
     document.getSelection()?.removeAllRanges();
 
-    const lines = [content];
     updateBoxAttachment({
-      lines,
-      text: content,
+
     });
   };
 
-  const onChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.currentTarget.value;
-    setContent(value);
+  // const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.currentTarget.value;
+
+  //   console.log("onChange value")
+  //   console.log(value)
+  //   // updateBoxAttachment({ ...upload });
+  // };
+
+  const onChange = (newAttachment: Attachment) => {
+
+    console.log("onChange newAttachment")
+    console.log(newAttachment)
+    // updateBoxAttachment({ ...newAttachment, type: 'box' });
+    updateBoxAttachment({ ...newAttachment });
   };
 
   return (
     <BoxComponent
-      text={content}
       width={width}
       height={height}
       mode={boxMode}
       size={size}
       inputRef={inputRef}
       positionTop={positionTop}
-      onChangeText={onChangeText}
+      // onChange={onChange}
+      onChangeImage={onChange}
       positionLeft={positionLeft}
       handleMouseUp={handleMouseUp}
       handleMouseOut={handleMouseOut}
